@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秘塔 AI 搜索 - 告别广告，直达答案</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .article-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* 头部封面 */
+        .header-cover {
+            position: relative;
+            height: 420px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .header-cover::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="30" width="60" height="8" rx="4" fill="%23ffffff15"/><rect x="20" y="45" width="45" height="8" rx="4" fill="%23ffffff10"/><rect x="20" y="60" width="50" height="8" rx="4" fill="%23ffffff08"/></svg>');
+            background-size: 300px;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .header-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            line-height: 1.3;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .header-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 10px 24px;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* 文章内容区 */
+        .article-content {
+            padding: 40px 32px;
+        }
+
+        /* 对比卡片 */
+        .compare-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            border-left: 4px solid #d63031;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .compare-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .compare-label {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .compare-old {
+            border: 2px solid #d63031;
+        }
+
+        .compare-old .compare-label {
+            background: #d63031;
+            color: #fff;
+        }
+
+        .compare-new {
+            border: 2px solid #00b894;
+        }
+
+        .compare-new .compare-label {
+            background: #00b894;
+            color: #fff;
+        }
+
+        .compare-item ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 16px;
+        }
+
+        .compare-item li {
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .compare-old li::before {
+            content: '❌';
+            position: absolute;
+            left: 0;
+        }
+
+        .compare-new li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+        }
+
+        /* 章节标题 */
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin: 48px 0 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            margin-right: 12px;
+        }
+
+        .section-title h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        /* 简介卡片 */
+        .intro-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8eeff 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .intro-card h3 {
+            font-size: 18px;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+        }
+
+        .intro-card p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #5a5a5a;
+        }
+
+        /* 功能表格 */
+        .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .feature-table td {
+            padding: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .feature-table tr:hover {
+            background: #f8f9ff;
+        }
+
+        .feature-table .icon {
+            font-size: 20px;
+        }
+
+        /* 用户标签 */
+        .user-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .user-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+        }
+
+        /* 步骤卡片 */
+        .step-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .step-badge {
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin: 8px 0 12px;
+        }
+
+        .step-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #5a5a5a;
+        }
+
+        .step-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-content li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .step-content li::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .step-tip {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff5cc 100%);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+            border-left: 3px solid #ffb800;
+        }
+
+        .step-tip-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #b8860b;
+            margin-bottom: 8px;
+        }
+
+        .step-tip p {
+            font-size: 14px;
+            color: #8b7355;
+            line-height: 1.6;
+            margin: 4px 0;
+        }
+
+        /* 示例卡片 */
+        .example-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .example-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .example-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .example-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .example-row {
+            margin: 16px 0;
+        }
+
+        .example-label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .example-value {
+            font-size: 15px;
+            color: #4a4a4a;
+            line-height: 1.6;
+        }
+
+        /* 提示词代码块 */
+        .prompt-box {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 12px 0;
+            position: relative;
+        }
+
+        .prompt-box code {
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            color: #a8e6cf;
+            font-size: 14px;
+            line-height: 1.8;
+            display: block;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 表格输出示例 */
+        .output-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 13px;
+        }
+
+        .output-table th {
+            background: #667eea;
+            color: #fff;
+            padding: 10px;
+            font-weight: 600;
+        }
+
+        .output-table td {
+            padding: 10px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .output-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        /* 提示词模板表格 */
+        .prompt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .prompt-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .prompt-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .prompt-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .prompt-table tr:hover {
+            background: #f0f4ff;
+        }
+
+        .prompt-table .scene {
+            color: #1a1a2e;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .prompt-table .prompt-text {
+            color: #5a5a5a;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 13px;
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .prompt-table .prompt-text:hover {
+            background: #667eea;
+            color: #fff;
+        }
+
+        /* 知识延伸 */
+        .knowledge-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin: 24px 0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .knowledge-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 16px;
+        }
+
+        .knowledge-content {
+            font-size: 15px;
+            line-height: 1.9;
+            color: #4a4a4a;
+        }
+
+        .knowledge-content ol {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+
+        .knowledge-content li {
+            margin: 8px 0;
+        }
+
+        /* 同类工具表格 */
+        .tool-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .tool-table th {
+            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+            color: #fff;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .tool-table td {
+            padding: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .tool-table tr:hover {
+            background: #f8fff8;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .status-yes {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .status-partial {
+            color: #ff9800;
+        }
+
+        /* 进阶玩法 */
+        .advanced-list {
+            display: grid;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .advanced-item {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+
+        .advanced-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.12);
+        }
+
+        .advanced-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .advanced-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .advanced-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        /* 合规提示 */
+        .warning-card {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin: 32px 0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .warning-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .warning-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .warning-list li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            font-size: 15px;
+            color: #5a5a5a;
+            line-height: 1.7;
+        }
+
+        .warning-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+        }
+
+        .warning-list li strong {
+            color: #e65100;
+        }
+
+        /* 结尾互动 */
+        .ending-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 40px 32px;
+            margin: 40px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .ending-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .ending-text {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .ending-cta {
+            display: inline-block;
+            background: #fff;
+            color: #667eea;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .ending-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 标签区 */
+        .tags-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 32px 0;
+            padding: 24px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .tag {
+            background: #f5f5f5;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: #667eea;
+            color: #fff;
+        }
+
+        /* 底部信息 */
+        .footer {
+            background: #f8f9ff;
+            padding: 24px 32px;
+            text-align: center;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .footer-date {
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 8px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .article-content {
+                padding: 24px 20px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .output-table,
+            .prompt-table,
+            .tool-table {
+                font-size: 12px;
+            }
+
+            .output-table th,
+            .output-table td,
+            .prompt-table th,
+            .prompt-table td,
+            .tool-table th,
+            .tool-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <article class="article-container">
+        <!-- 头部封面 -->
+        <header class="header-cover">
+            <div class="header-content">
+                <div class="header-icon">🔍</div>
+                <h1 class="header-title">告别广告<br>秒出答案</h1>
+                <p class="header-subtitle">秘塔 AI 搜索 - 让信息检索回归本质</p>
+                <span class="header-tag">🔥 零广告 · 结构化答案 · 思维导图</span>
+            </div>
+        </header>
+
+        <!-- 文章内容 -->
+        <div class="article-content">
+            <!-- 对比冲击 -->
+            <div class="compare-section">
+                <h3 style="font-size: 20px; color: #d63031; margin-bottom: 16px;">你是否经历过这些痛苦？</h3>
+                <div class="compare-grid">
+                    <div class="compare-item compare-old">
+                        <span class="compare-label">传统搜索</span>
+                        <ul>
+                            <li>前 3 条全是广告</li>
+                            <li>翻 10 页找不到答案</li>
+                            <li>看完一堆网页还是懵</li>
+                            <li>信息碎片化，难以整理</li>
+                        </ul>
+                    </div>
+                    <div class="compare-item compare-new">
+                        <span class="compare-label">秘塔 AI 搜索</span>
+                        <ul>
+                            <li>0 广告，直达答案</li>
+                            <li>结构化大纲，清晰明了</li>
+                            <li>自动生成思维导图</li>
+                            <li>标注引用来源，可验证</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第一部分：应用简介 -->
+            <div class="section-title">
+                <span class="section-number">01</span>
+                <h2>这是什么神器？</h2>
+            </div>
+
+            <div class="intro-card">
+                <h3>🔍 秘塔 AI 搜索（Metaso）</h3>
+                <p><strong>革命性的搜索引擎</strong>，彻底颠覆传统搜索体验。它不再给你一堆广告链接，而是直接提供<strong>结构化的答案、思维导图和引用来源</strong>，让你告别"翻10页找答案"的痛苦。</p>
+            </div>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">✨ 核心能力</h3>
+            <table class="feature-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">功能</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="icon">🚫</span> 零广告搜索</td>
+                        <td>彻底摆脱竞价排名和广告干扰</td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">📊</span> 结构化答案</td>
+                        <td>自动整理成大纲、表格、对比</td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">🧠</span> 思维导图</td>
+                        <td>复杂主题一键生成可视化导图</td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">📎</span> 引用溯源</td>
+                        <td>每个答案标注来源，可追溯验证</td>
+                    </tr>
+                    <tr>
+                        <td><span class="icon">🔍</span> 深度搜索</td>
+                        <td>综合多个来源，给出全面解答</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">👥 适合谁用？</h3>
+            <div class="user-list">
+                <span class="user-tag">🎓 学生</span>
+                <span class="user-tag">💼 职场人</span>
+                <span class="user-tag">🔬 研究人员</span>
+                <span class="user-tag">🌐 普通用户</span>
+            </div>
+
+            <!-- 第二部分：使用教程 -->
+            <div class="section-title">
+                <span class="section-number">02</span>
+                <h2>手把手教程</h2>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 1</span>
+                <h3 class="step-title">访问秘塔 AI 搜索</h3>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>官方网站</strong>：访问 metaso.cn</li>
+                        <li>无需注册，打开即用</li>
+                        <li>支持电脑端和移动端</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 2</span>
+                <h3 class="step-title">输入你的问题</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>在搜索框输入问题或关键词</li>
+                        <li>支持自然语言提问，越具体越好</li>
+                        <li>例如："如何提高睡眠质量"、"2024年AI发展趋势"</li>
+                    </ul>
+                </div>
+                <div class="step-tip">
+                    <div class="step-tip-title">💡 小贴士</div>
+                    <p>• 问题尽量完整，包含背景信息</p>
+                    <p>• 可以问对比类问题（如"A 和 B 哪个更好"）</p>
+                    <p>• 支持追问，持续深挖答案</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 3</span>
+                <h3 class="step-title">查看结构化答案</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>搜索结果自动整理成清晰的大纲结构</li>
+                        <li>核心要点用<strong>加粗</strong>或列表展示</li>
+                        <li>复杂内容会生成表格对比</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 4</span>
+                <h3 class="step-title">查看思维导图（可选）</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>点击右上角"思维导图"按钮</li>
+                        <li>AI 自动将答案转化为可视化导图</li>
+                        <li>可展开/折叠节点，清晰理解逻辑</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 5</span>
+                <h3 class="step-title">验证引用来源</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>每个答案后标注了引用来源编号</li>
+                        <li>点击编号可跳转到原始网页</li>
+                        <li>支持交叉验证信息准确性</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 6</span>
+                <h3 class="step-title">追问深入探讨</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>在答案下方可以继续追问</li>
+                        <li>AI 会基于上下文给出更深入的回答</li>
+                        <li>形成连续对话，逐步解决问题</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 第三部分：实战示例 -->
+            <div class="section-title">
+                <span class="section-number">03</span>
+                <h2>实战示例</h2>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <span class="example-number">1</span>
+                    <h3 class="example-title">写论文查资料</h3>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">📚 场景</div>
+                    <div class="example-value">大学生需要写一篇关于"碳中和"的论文</div>
+                </div>
+                <div class="prompt-box">
+                    <code>碳中和的定义、实现路径、中国的政策措施和面临的挑战</code>
+                    <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">✨ 秘塔输出</div>
+                    <div class="example-value">
+                        • <strong>一、碳中和定义</strong>：详细解释概念<br>
+                        • <strong>二、实现路径</strong>：技术路线、时间表<br>
+                        • <strong>三、中国政策</strong>：双碳目标、具体措施<br>
+                        • <strong>四、面临挑战</strong>：技术瓶颈、成本问题<br>
+                        • <strong>五、引用来源</strong>：10+ 权威网站链接
+                    </div>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">🎯 效果</div>
+                    <div class="example-value">5 分钟获得完整论文框架，省去翻阅大量网页的时间</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <span class="example-number">2</span>
+                    <h3 class="example-title">选购决策对比</h3>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">🛒 场景</div>
+                    <div class="example-value">想买洗碗机，不知道选哪个品牌</div>
+                </div>
+                <div class="prompt-box">
+                    <code>西门子、美的、海尔洗碗机对比，优缺点和性价比分析</code>
+                    <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">✨ 秘塔输出</div>
+                    <div class="example-value">
+                        <table class="output-table">
+                            <thead>
+                                <tr>
+                                    <th>品牌</th>
+                                    <th>优点</th>
+                                    <th>缺点</th>
+                                    <th>价格</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>西门子</td>
+                                    <td>洗净度高、静音</td>
+                                    <td>价格贵</td>
+                                    <td>3000-8000</td>
+                                </tr>
+                                <tr>
+                                    <td>美的</td>
+                                    <td>性价比高</td>
+                                    <td>容量略小</td>
+                                    <td>1500-4000</td>
+                                </tr>
+                                <tr>
+                                    <td>海尔</td>
+                                    <td>售后好、功能全</td>
+                                    <td>噪音稍大</td>
+                                    <td>2000-5000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">🎯 效果</div>
+                    <div class="example-value">一次搜索解决选择困难症，不用再看100条评测</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <span class="example-number">3</span>
+                    <h3 class="example-title">行业调研分析</h3>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">💼 场景</div>
+                    <div class="example-value">公司需要了解"预制菜市场"现状</div>
+                </div>
+                <div class="prompt-box">
+                    <code>2024年中国预制菜行业发展现状、市场规模、主要玩家和未来趋势</code>
+                    <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">✨ 秘塔输出</div>
+                    <div class="example-value">
+                        • 思维导图展示产业链全貌<br>
+                        • 市场规模数据（含增长率）<br>
+                        • Top 10 企业及市场份额<br>
+                        • 未来 3-5 年预测<br>
+                        • 10+ 行业报告引用
+                    </div>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">🎯 效果</div>
+                    <div class="example-value">替代初步调研，快速形成行业认知</div>
+                </div>
+            </div>
+
+            <!-- 第四部分：提示词模板库 -->
+            <div class="section-title">
+                <span class="section-number">04</span>
+                <h2>提示词模板库</h2>
+            </div>
+
+            <p style="font-size: 15px; color: #888; margin-bottom: 20px;">直接复制以下问题到秘塔 AI 搜索中使用 👇</p>
+
+            <table class="prompt-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">场景</th>
+                        <th>搜索问题模板（点击复制）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="scene">📚 学习总结</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">请总结【主题】的核心概念、发展历程和最新进展</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🆚 产品对比</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">对比【A产品】和【B产品】的功能、价格、优缺点和适用场景</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🔍 行业调研</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【行业名称】的市场规模、竞争格局、主要玩家和未来趋势</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">💡 问题解决</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【具体问题】的原因分析、解决方案和注意事项</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">📊 数据查询</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【主题】的最新统计数据、权威来源和历年对比</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🌍 地理信息</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【城市/国家】的气候、文化、旅游景点和注意事项</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">📖 书籍影评</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【书名/电影名】的剧情简介、评价、主题分析和推荐理由</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🏥 健康咨询</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【症状/疾病】的成因、治疗方法、预防措施（需就医确认）</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">💻 技术学习</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【技术名称】的原理、应用场景、学习路径和资源推荐</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🎯 职业规划</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">【职业名称】的工作内容、发展前景、所需技能和薪资水平</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 第五部分：知识延伸 -->
+            <div class="section-title">
+                <span class="section-number">05</span>
+                <h2>知识延伸</h2>
+            </div>
+
+            <div class="knowledge-card">
+                <h3 class="knowledge-title">🧠 原理简介</h3>
+                <div class="knowledge-content">
+                    <p>秘塔 AI 搜索采用了<strong>大语言模型（LLM）+ 搜索引擎</strong>的混合架构：</p>
+                    <ol>
+                        <li><strong>信息抓取</strong>：从互联网抓取相关内容</li>
+                        <li><strong>AI 理解</strong>：用大模型理解问题和内容</li>
+                        <li><strong>智能整合</strong>：将碎片信息整合成结构化答案</li>
+                        <li><strong>引用溯源</strong>：保留原始来源供验证</li>
+                    </ol>
+                    <p style="margin-top: 12px;">这种技术被称为 <strong>RAG（检索增强生成）</strong>，结合了搜索的实时性和 AI 的理解能力。</p>
+                </div>
+            </div>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">🔧 同类工具推荐</h3>
+            <table class="tool-table">
+                <thead>
+                    <tr>
+                        <th>工具名称</th>
+                        <th>特点</th>
+                        <th>国内可用</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="tool-name">Perplexity AI</td>
+                        <td>国际版秘塔，引用更丰富</td>
+                        <td class="status-partial">⚠️ 需科学上网</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">天工 AI 搜索</td>
+                        <td>昆仑万维出品，带 AI 音乐</td>
+                        <td class="status-yes">✅ 完全可用</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">360 AI 搜索</td>
+                        <td>集成在 360 浏览器中</td>
+                        <td class="status-yes">✅ 完全可用</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">Kimi 智能助手</td>
+                        <td>侧重长文档理解</td>
+                        <td class="status-yes">✅ 完全可用</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">New Bing (Copilot)</td>
+                        <td>微软出品，集成 ChatGPT</td>
+                        <td class="status-partial">⚠️ 访问受限</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">🚀 进阶玩法</h3>
+            <div class="advanced-list">
+                <div class="advanced-item">
+                    <span class="advanced-number">1</span>
+                    <div class="advanced-content">
+                        <h4>构建知识库</h4>
+                        <p>用秘塔系统学习某个领域，保存关键答案</p>
+                    </div>
+                </div>
+                <div class="advanced-item">
+                    <span class="advanced-number">2</span>
+                    <div class="advanced-content">
+                        <h4>验证信息真伪</h4>
+                        <p>对比秘塔答案和原始来源，培养批判性思维</p>
+                    </div>
+                </div>
+                <div class="advanced-item">
+                    <span class="advanced-number">3</span>
+                    <div class="advanced-content">
+                        <h4>辅助写作</h4>
+                        <p>用秘塔生成大纲，再用 AI 写作工具扩写</p>
+                    </div>
+                </div>
+                <div class="advanced-item">
+                    <span class="advanced-number">4</span>
+                    <div class="advanced-content">
+                        <h4>深度调研</h4>
+                        <p>先秘塔了解全貌，再针对性搜索细节</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 合规提示 -->
+            <div class="warning-card">
+                <h3 class="warning-title">⚠️ 使用注意事项</h3>
+                <ul class="warning-list">
+                    <li><strong>信息验证</strong>：AI 整合的答案可能存在偏差，重要决策请查看原始引用来源</li>
+                    <li><strong>时效性</strong>：部分数据可能不是最新的，涉及实时信息请多方验证</li>
+                    <li><strong>医疗法律</strong>：涉及健康、法律等专业问题，搜索结果仅供参考，请咨询专业人士</li>
+                    <li><strong>学术诚信</strong>：用于学术研究时，必须标注引用来源，不可直接抄袭</li>
+                    <li><strong>隐私保护</strong>：不要在搜索中输入个人敏感信息（身份证号、银行卡等）</li>
+                </ul>
+            </div>
+
+            <!-- 结尾互动 -->
+            <div class="ending-section">
+                <h3 class="ending-title">你还在用什么搜索引擎？</h3>
+                <p class="ending-text">
+                    试试秘塔 AI 搜索，体验<br>
+                    从"翻 10 页找答案"到"3 秒出结构化答案"的飞跃<br><br>
+                    一次尝试，终身难忘 🚀
+                </p>
+                <a href="https://metaso.cn/" target="_blank" class="ending-cta">立即体验秘塔 AI 搜索 →</a>
+            </div>
+
+            <!-- 标签 -->
+            <div class="tags-section">
+                <span class="tag">#秘塔AI搜索</span>
+                <span class="tag">#AI搜索引擎</span>
+                <span class="tag">#效率工具</span>
+                <span class="tag">#学习方法</span>
+                <span class="tag">#论文神器</span>
+                <span class="tag">#职场干货</span>
+                <span class="tag">#Metaso</span>
+                <span class="tag">#AI黑科技</span>
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        <footer class="footer">
+            <p class="footer-text">
+                📚 AI 应用小百科 · 让每个人都能玩转 AI<br>
+                关注我，解锁更多实用 AI 工具教程
+            </p>
+            <p class="footer-date">2025年12月17日</p>
+        </footer>
+    </article>
+
+    <script>
+        // 复制提示词
+        function copyPrompt(btn) {
+            const code = btn.previousElementSibling.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '已复制 ✓';
+                setTimeout(() => {
+                    btn.textContent = '复制';
+                }, 2000);
+            });
+        }
+
+        // 复制表格中的提示词
+        function copyText(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const original = element.textContent;
+                element.textContent = '已复制 ✓';
+                element.style.background = '#4caf50';
+                element.style.color = '#fff';
+                setTimeout(() => {
+                    element.textContent = original;
+                    element.style.background = '#f5f5f5';
+                    element.style.color = '#5a5a5a';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>

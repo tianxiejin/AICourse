@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可灵 AI - 让老照片里的亲人对你微笑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .article-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* 头部封面 */
+        .header-cover {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .header-cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23ffffff10" stroke-width="0.5"/><circle cx="50" cy="50" r="30" fill="none" stroke="%23ffffff08" stroke-width="0.5"/><circle cx="50" cy="50" r="20" fill="none" stroke="%23ffffff05" stroke-width="0.5"/></svg>');
+            background-size: 200px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-50px) rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 24px;
+        }
+
+        .header-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* 文章内容区 */
+        .article-content {
+            padding: 40px 32px;
+        }
+
+        /* 开篇引言 */
+        .intro-section {
+            background: linear-gradient(135deg, #fff5f5 0%, #fff0f6 100%);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            border-left: 4px solid #f5576c;
+        }
+
+        .intro-text {
+            font-size: 18px;
+            line-height: 2;
+            color: #4a4a4a;
+        }
+
+        .intro-text .highlight {
+            color: #f5576c;
+            font-weight: 600;
+        }
+
+        /* 章节标题 */
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin: 48px 0 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            margin-right: 12px;
+        }
+
+        .section-title h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        /* 简介卡片 */
+        .intro-card {
+            background: #f8f9ff;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .intro-card h3 {
+            font-size: 18px;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-card h3 .emoji {
+            margin-right: 8px;
+            font-size: 24px;
+        }
+
+        .intro-card p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #5a5a5a;
+        }
+
+        /* 功能表格 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #f8f9ff 100%);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .feature-name {
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .feature-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        /* 用户群体 */
+        .user-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .user-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-tag .emoji {
+            margin-right: 6px;
+        }
+
+        /* 步骤卡片 */
+        .step-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .step-badge {
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin: 8px 0 12px;
+        }
+
+        .step-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #5a5a5a;
+        }
+
+        .step-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-content li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .step-content li::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .step-tip {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff5cc 100%);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+            border-left: 3px solid #ffb800;
+        }
+
+        .step-tip-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #b8860b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-tip-title .emoji {
+            margin-right: 6px;
+        }
+
+        .step-tip p {
+            font-size: 14px;
+            color: #8b7355;
+            line-height: 1.6;
+            margin: 4px 0;
+        }
+
+        /* 示例卡片 */
+        .example-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .example-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .example-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .example-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .example-row {
+            margin: 16px 0;
+        }
+
+        .example-label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .example-value {
+            font-size: 15px;
+            color: #4a4a4a;
+            line-height: 1.6;
+        }
+
+        /* 提示词代码块 */
+        .prompt-box {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-box::before {
+            content: '提示词';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 4px 12px;
+            border-radius: 0 12px 0 12px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .prompt-box code {
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            color: #a8e6cf;
+            font-size: 14px;
+            line-height: 1.8;
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 提示词模板表格 */
+        .prompt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .prompt-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .prompt-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .prompt-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .prompt-table tr:hover {
+            background: #f0f4ff;
+        }
+
+        .prompt-table .scene {
+            color: #1a1a2e;
+            font-weight: 500;
+        }
+
+        .prompt-table .prompt-text {
+            color: #5a5a5a;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 13px;
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* 知识延伸 */
+        .knowledge-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin: 24px 0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .knowledge-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .knowledge-title .emoji {
+            margin-right: 8px;
+        }
+
+        .knowledge-content {
+            font-size: 15px;
+            line-height: 1.9;
+            color: #4a4a4a;
+        }
+
+        .knowledge-content ol {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+
+        .knowledge-content li {
+            margin: 8px 0;
+        }
+
+        /* 同类工具表格 */
+        .tool-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .tool-table th {
+            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+            color: #fff;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .tool-table td {
+            padding: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #5a5a5a;
+        }
+
+        .tool-table tr:hover {
+            background: #f8fff8;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .status-yes {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .status-partial {
+            color: #ff9800;
+        }
+
+        /* 进阶玩法 */
+        .advanced-list {
+            display: grid;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .advanced-item {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+
+        .advanced-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.12);
+        }
+
+        .advanced-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .advanced-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .advanced-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        /* 合规提示 */
+        .warning-card {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin: 32px 0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .warning-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .warning-title .emoji {
+            margin-right: 8px;
+            font-size: 24px;
+        }
+
+        .warning-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .warning-list li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            font-size: 15px;
+            color: #5a5a5a;
+            line-height: 1.7;
+        }
+
+        .warning-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+        }
+
+        .warning-list li strong {
+            color: #e65100;
+        }
+
+        /* 结尾互动 */
+        .ending-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 40px 32px;
+            margin: 40px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .ending-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .ending-text {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .ending-cta {
+            display: inline-block;
+            background: #fff;
+            color: #667eea;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .ending-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 标签区 */
+        .tags-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 32px 0;
+            padding: 24px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .tag {
+            background: #f5f5f5;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: #667eea;
+            color: #fff;
+        }
+
+        /* 底部信息 */
+        .footer {
+            background: #f8f9ff;
+            padding: 24px 32px;
+            text-align: center;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .footer-date {
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 8px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .article-content {
+                padding: 24px 20px;
+            }
+
+            .header-title {
+                font-size: 24px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .prompt-table th,
+            .prompt-table td {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <article class="article-container">
+        <!-- 头部封面 -->
+        <header class="header-cover">
+            <div class="header-content">
+                <div class="header-icon">✨</div>
+                <h1 class="header-title">让老照片里的亲人<br>对你微笑</h1>
+                <p class="header-subtitle">保姆级教程 | 可灵 AI 完全使用指南</p>
+                <span class="header-tag">🔥 免费使用 · 国内可用 · 效果惊艳</span>
+            </div>
+        </header>
+
+        <!-- 文章内容 -->
+        <div class="article-content">
+            <!-- 开篇引言 -->
+            <div class="intro-section">
+                <p class="intro-text">
+                    你有多久没翻过家里的老相册了？<br><br>
+                    那些泛黄的照片里，藏着我们最珍贵的记忆。<br><br>
+                    如果我告诉你，现在有一个 AI 工具，可以让<span class="highlight">照片里的人动起来</span>——对你微笑、眨眼、甚至挥手，你会不会想试试？<br><br>
+                    今天，就来教你玩转<span class="highlight">可灵 AI</span>。
+                </p>
+            </div>
+
+            <!-- 第一部分：应用简介 -->
+            <div class="section-title">
+                <span class="section-number">01</span>
+                <h2>这是什么神器？</h2>
+            </div>
+
+            <div class="intro-card">
+                <h3><span class="emoji">🎬</span>可灵 AI（Kling）</h3>
+                <p><strong>快手</strong>推出的 AI 视频生成工具，核心能力是将<strong>静态图片转化为动态视频</strong>。它最火爆的功能是让老照片"动起来"——照片中的人物可以微笑、眨眼、转头，甚至做出拥抱等动作，效果极其逼真。</p>
+            </div>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">✨ 核心能力</h3>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📸</div>
+                    <div class="feature-name">图生视频</div>
+                    <div class="feature-desc">上传一张图片，AI 自动生成 5-10 秒动态视频</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">😊</div>
+                    <div class="feature-name">表情动画</div>
+                    <div class="feature-desc">让照片人物微笑、眨眼、转头</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🤗</div>
+                    <div class="feature-name">动作生成</div>
+                    <div class="feature-desc">让照片人物做出挥手、拥抱等动作</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎬</div>
+                    <div class="feature-name">文生视频</div>
+                    <div class="feature-desc">输入文字描述，直接生成视频</div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">👥 适合谁用？</h3>
+            <div class="user-list">
+                <span class="user-tag"><span class="emoji">👨‍👩‍👧</span>怀旧人群</span>
+                <span class="user-tag"><span class="emoji">📱</span>短视频创作者</span>
+                <span class="user-tag"><span class="emoji">🎨</span>设计师</span>
+                <span class="user-tag"><span class="emoji">📢</span>新媒体运营</span>
+            </div>
+
+            <!-- 第二部分：使用教程 -->
+            <div class="section-title">
+                <span class="section-number">02</span>
+                <h2>手把手教程</h2>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 1</span>
+                <h3 class="step-title">访问可灵 AI</h3>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>网页版</strong>：访问 klingai.kuaishou.com</li>
+                        <li><strong>App 版</strong>：在应用商店搜索"可灵"下载</li>
+                        <li>使用手机号或快手账号登录</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 2</span>
+                <h3 class="step-title">选择「图片生成视频」功能</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>登录后，在首页找到「图片生成视频」或「AI 视频」入口</li>
+                        <li>点击进入功能页面</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 3</span>
+                <h3 class="step-title">上传照片</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>点击「上传图片」按钮</li>
+                        <li>从相册选择一张老照片（人脸清晰的效果最好）</li>
+                        <li>支持 JPG、PNG 格式</li>
+                    </ul>
+                </div>
+                <div class="step-tip">
+                    <div class="step-tip-title"><span class="emoji">💡</span>小贴士</div>
+                    <p>• 照片分辨率越高，生成效果越好</p>
+                    <p>• 人脸正面、五官清晰的照片效果最佳</p>
+                    <p>• 避免使用模糊、遮挡严重的照片</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 4</span>
+                <h3 class="step-title">输入动作提示词（可选）</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>在提示词框中描述想要的动作效果</li>
+                        <li>也可以留空，让 AI 自动生成自然动作</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 5</span>
+                <h3 class="step-title">点击生成</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>点击「生成视频」按钮</li>
+                        <li>等待约 30 秒 - 2 分钟</li>
+                        <li>生成完成后可预览和下载</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <span class="step-badge">步骤 6</span>
+                <h3 class="step-title">保存与分享</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>点击「下载」保存到本地</li>
+                        <li>可直接分享到微信、抖音等平台</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 第三部分：实战示例 -->
+            <div class="section-title">
+                <span class="section-number">03</span>
+                <h2>实战示例</h2>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <span class="example-number">1</span>
+                    <h3 class="example-title">让老照片里的奶奶微笑</h3>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">📷 场景</div>
+                    <div class="example-value">一张 30 年前奶奶的黑白老照片</div>
+                </div>
+                <div class="prompt-box">
+                    <code>让照片中的人物轻轻微笑，眼神温柔地看向镜头，自然地眨眼</code>
+                    <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">✨ 效果</div>
+                    <div class="example-value">照片中的奶奶会缓缓露出微笑，眼睛自然眨动，仿佛在看着你</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <span class="example-number">2</span>
+                    <h3 class="example-title">让全家福动起来</h3>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">📷 场景</div>
+                    <div class="example-value">一张多人的家庭合照</div>
+                </div>
+                <div class="prompt-box">
+                    <code>照片中的人物自然地转头互看，露出幸福的笑容，轻轻挥手</code>
+                    <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">✨ 效果</div>
+                    <div class="example-value">照片中的家人会互相对视、微笑，营造温馨的家庭氛围</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <span class="example-number">3</span>
+                    <h3 class="example-title">证件照变活泼</h3>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">📷 场景</div>
+                    <div class="example-value">一张正式的证件照</div>
+                </div>
+                <div class="prompt-box">
+                    <code>人物从严肃表情变成开心的笑容，轻轻歪头，眨眼</code>
+                    <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                </div>
+                <div class="example-row">
+                    <div class="example-label">✨ 效果</div>
+                    <div class="example-value">原本严肃的证件照变得生动活泼，适合做有趣的社交头像</div>
+                </div>
+            </div>
+
+            <!-- 第四部分：提示词模板库 -->
+            <div class="section-title">
+                <span class="section-number">04</span>
+                <h2>提示词模板库</h2>
+            </div>
+
+            <p style="font-size: 15px; color: #888; margin-bottom: 20px;">直接复制以下提示词到可灵 AI 中使用 👇</p>
+
+            <table class="prompt-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">场景</th>
+                        <th>提示词（点击复制）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="scene">😊 温馨微笑</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">让人物露出温暖的微笑，眼神柔和，自然眨眼</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">😮 惊喜表情</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">人物表情从平静变成惊喜，眼睛睁大，嘴角上扬</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">👋 轻轻挥手</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">人物抬起右手轻轻挥动，面带微笑，像在打招呼</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🙂 点头致意</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">人物微微点头，露出友善的笑容</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">💕 深情对视</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">人物深情地看向镜头，眼神温柔，嘴角带笑</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">😉 调皮眨眼</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">人物调皮地眨一下眼睛，露出俏皮的笑容</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">💫 转头回眸</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">人物缓缓转头，回眸一笑，眼神灵动</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🤗 拥抱动作</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">两个人物互相拥抱，表情幸福温馨</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🌸 自然呼吸</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">人物自然地呼吸，胸口微微起伏，表情放松</span></td>
+                    </tr>
+                    <tr>
+                        <td class="scene">🍃 风吹发丝</td>
+                        <td><span class="prompt-text" onclick="copyText(this)">微风吹过，人物发丝轻轻飘动，表情惬意</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 第五部分：知识延伸 -->
+            <div class="section-title">
+                <span class="section-number">05</span>
+                <h2>知识延伸</h2>
+            </div>
+
+            <div class="knowledge-card">
+                <h3 class="knowledge-title"><span class="emoji">🧠</span>原理简介</h3>
+                <div class="knowledge-content">
+                    <p>可灵 AI 使用了<strong>扩散模型（Diffusion Model）</strong>和<strong>视频生成技术</strong>。简单来说：</p>
+                    <ol>
+                        <li>AI 首先"理解"照片中的人物面部特征</li>
+                        <li>然后根据提示词，预测人物做出相应动作时的每一帧画面</li>
+                        <li>最后将这些画面连成流畅的视频</li>
+                    </ol>
+                    <p style="margin-top: 12px;">这项技术属于 <strong>AIGC（AI 生成内容）</strong>领域，与 Sora、Runway 等视频生成工具原理类似。</p>
+                </div>
+            </div>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">🔧 同类工具推荐</h3>
+            <table class="tool-table">
+                <thead>
+                    <tr>
+                        <th>工具名称</th>
+                        <th>特点</th>
+                        <th>国内可用</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="tool-name">即梦 AI</td>
+                        <td>字节出品，写实风格强</td>
+                        <td class="status-yes">✅ 完全可用</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">Runway Gen-3</td>
+                        <td>效果顶级，国际领先</td>
+                        <td class="status-partial">⚠️ 需科学上网</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">Pika Labs</td>
+                        <td>风格化视频生成</td>
+                        <td class="status-partial">⚠️ 需科学上网</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">D-ID</td>
+                        <td>专注人像说话视频</td>
+                        <td class="status-partial">⚠️ 需科学上网</td>
+                    </tr>
+                    <tr>
+                        <td class="tool-name">HeyGen</td>
+                        <td>AI 数字人视频</td>
+                        <td class="status-partial">⚠️ 部分功能可用</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-size: 18px; color: #1a1a2e; margin: 32px 0 20px;">🚀 进阶玩法</h3>
+            <div class="advanced-list">
+                <div class="advanced-item">
+                    <span class="advanced-number">1</span>
+                    <div class="advanced-content">
+                        <h4>连续多段视频</h4>
+                        <p>生成多个视频片段，用剪映拼接成完整故事</p>
+                    </div>
+                </div>
+                <div class="advanced-item">
+                    <span class="advanced-number">2</span>
+                    <div class="advanced-content">
+                        <h4>配合 AI 配音</h4>
+                        <p>用 AI 语音工具给视频加旁白，更有感染力</p>
+                    </div>
+                </div>
+                <div class="advanced-item">
+                    <span class="advanced-number">3</span>
+                    <div class="advanced-content">
+                        <h4>风格化处理</h4>
+                        <p>先用 AI 绘图工具将照片转成特定风格，再生成视频</p>
+                    </div>
+                </div>
+                <div class="advanced-item">
+                    <span class="advanced-number">4</span>
+                    <div class="advanced-content">
+                        <h4>制作回忆相册</h4>
+                        <p>将多张老照片都做成动态，制作成回忆视频集</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 合规提示 -->
+            <div class="warning-card">
+                <h3 class="warning-title"><span class="emoji">⚠️</span>使用注意事项</h3>
+                <ul class="warning-list">
+                    <li><strong>肖像权</strong>：请仅使用自己或已获授权的照片，未经他人同意不得使用他人照片</li>
+                    <li><strong>隐私保护</strong>：避免上传包含敏感信息（证件号、地址等）的照片</li>
+                    <li><strong>用途限制</strong>：生成内容仅供个人欣赏和非商业分享，不得用于商业广告、虚假信息传播等</li>
+                    <li><strong>平台规则</strong>：分享到社交平台时，建议标注"AI 生成"</li>
+                </ul>
+            </div>
+
+            <!-- 结尾互动 -->
+            <div class="ending-section">
+                <h3 class="ending-title">你最想让谁的照片动起来？</h3>
+                <p class="ending-text">
+                    也许是已故的亲人，也许是年轻时的父母<br>
+                    也许是某个再也回不去的瞬间<br><br>
+                    去试试吧，让记忆重新鲜活起来 ❤️
+                </p>
+                <a href="https://klingai.kuaishou.com/" target="_blank" class="ending-cta">立即体验可灵 AI →</a>
+            </div>
+
+            <!-- 标签 -->
+            <div class="tags-section">
+                <span class="tag">#可灵AI</span>
+                <span class="tag">#老照片修复</span>
+                <span class="tag">#AI黑科技</span>
+                <span class="tag">#图生视频</span>
+                <span class="tag">#怀旧</span>
+                <span class="tag">#送给爸妈</span>
+                <span class="tag">#科技改变生活</span>
+                <span class="tag">#AI教程</span>
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        <footer class="footer">
+            <p class="footer-text">
+                📚 AI 应用小百科 · 让每个人都能玩转 AI<br>
+                关注我，解锁更多实用 AI 工具教程
+            </p>
+            <p class="footer-date">2025年12月16日</p>
+        </footer>
+    </article>
+
+    <script>
+        // 复制提示词
+        function copyPrompt(btn) {
+            const code = btn.previousElementSibling.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '已复制 ✓';
+                setTimeout(() => {
+                    btn.textContent = '复制';
+                }, 2000);
+            });
+        }
+
+        // 复制表格中的提示词
+        function copyText(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const original = element.textContent;
+                element.textContent = '已复制 ✓';
+                element.style.background = '#4caf50';
+                element.style.color = '#fff';
+                setTimeout(() => {
+                    element.textContent = original;
+                    element.style.background = '#f5f5f5';
+                    element.style.color = '#5a5a5a';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>
