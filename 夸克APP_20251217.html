@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夸克 APP（AI工具箱）- 使用教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .header .meta {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 26px;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-weight: 700;
+        }
+        
+        .subsection-title {
+            font-size: 20px;
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .prompt-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px dashed #667eea;
+            position: relative;
+        }
+        
+        .prompt-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+        
+        .copy-btn:active {
+            background: #5568d3;
+        }
+        
+        .icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tbody tr:hover {
+            background: #f5f7fa;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 5px 5px 5px 0;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 3px solid #667eea;
+        }
+        
+        blockquote {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        
+        strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 13px;
+            color: #e83e8c;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .section-title {
+                font-size: 22px;
+            }
+            
+            table {
+                font-size: 13px;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 夸克 APP（AI工具箱）使用教程</h1>
+            <div class="meta">
+                生成日期：2025年12月17日 | 适用平台：微信公众号 / 小红书
+            </div>
+        </div>
+        
+        <div class="content">
+            
+            <!-- 应用简介 -->
+            <div class="section">
+                <h2 class="section-title">一、应用简介</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🤔 这是什么？</h3>
+                    <p>夸克 APP 是阿里巴巴智能信息事业群旗下的一款综合性智能工具应用，内置了强大的 <strong>AI 工具箱</strong>，集成了 AI 搜题、AI 写作、AI PPT、文件扫描总结、视频总结等多项功能。它不仅是一个浏览器，更是学生党、考研党和职场人士的效率利器。</p>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">⭐ 核心能力</h3>
+                    <ul>
+                        <li><strong>AI 搜题</strong>：拍照识题，秒出答案和详细解析（覆盖小学到大学）</li>
+                        <li><strong>AI 写作</strong>：一键生成各类文案、报告、总结、文章续写</li>
+                        <li><strong>AI PPT</strong>：输入主题或大纲，自动生成精美演示文稿</li>
+                        <li><strong>智能扫描</strong>：文档识别、PDF 转文字、图片提取文字</li>
+                        <li><strong>视频总结</strong>：提取长视频核心内容，生成文字摘要和时间轴</li>
+                        <li><strong>网盘功能</strong>：云存储+智能文件管理</li>
+                        <li><strong>学习工具</strong>：公式识别、背单词、网课助手</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">👥 适合谁用？</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+                        <span class="tag">学生党：搜题神器、作业辅导</span>
+                        <span class="tag">考研/考公党：知识整理、真题解析</span>
+                        <span class="tag">职场白领：快速做PPT、写周报</span>
+                        <span class="tag">内容创作者：文案生成、视频脚本</span>
+                        <span class="tag">终身学习者：网课笔记、效率提升</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 使用教程 -->
+            <div class="section">
+                <h2 class="section-title">二、使用教程</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">📱 步骤 1：下载并注册</h3>
+                    <ol>
+                        <li>在应用商店搜索「夸克」或访问官网下载</li>
+                        <li>打开 APP，使用手机号注册/登录（支持微信/支付宝快捷登录）</li>
+                        <li>首次进入会有新手引导，建议快速浏览</li>
+                    </ol>
+                    <blockquote>📸 配图位置：APP 首页截图，标注「AI 工具箱」入口位置</blockquote>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🎯 步骤 2：进入 AI 工具箱</h3>
+                    <ol>
+                        <li>打开夸克 APP，点击底部导航栏的 <strong>「工具」</strong> 图标</li>
+                        <li>在工具页面顶部找到 <strong>「AI 工具箱」</strong> 专区</li>
+                        <li>可以看到所有 AI 功能的快捷入口</li>
+                    </ol>
+                    <blockquote>📸 配图位置：工具页面截图，用红框标注「AI 工具箱」位置</blockquote>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">📚 步骤 3：AI 搜题使用</h3>
+                    <ol>
+                        <li>点击「AI 搜题」功能</li>
+                        <li>对准题目拍照（支持批量识别）</li>
+                        <li>等待 1-2 秒，系统自动识别题目并给出答案</li>
+                        <li>点击答案可查看详细解题步骤和知识点讲解</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>使用技巧：</strong>
+                        <ul>
+                            <li>拍照时保持画面清晰，避免反光</li>
+                            <li>支持数学、物理、化学、英语等多学科</li>
+                            <li>答案可一键收藏到「错题本」</li>
+                        </ul>
+                    </div>
+                    <blockquote>📸 配图位置：拍照识题界面 + 答案解析页面对比图</blockquote>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">✍️ 步骤 4：AI 写作助手</h3>
+                    <ol>
+                        <li>点击「AI 写作」功能</li>
+                        <li>选择写作类型（周报、总结、文案、续写等）</li>
+                        <li>输入关键信息或主题</li>
+                        <li>点击「生成」，等待 3-5 秒</li>
+                        <li>查看生成结果，可继续修改或重新生成</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>适用场景：</strong>工作周报/月报、活动策划方案、产品文案、小红书/公众号文案、论文大纲
+                    </div>
+                    <blockquote>📸 配图位置：写作类型选择页面 + 生成结果展示</blockquote>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🎨 步骤 5：AI PPT 生成</h3>
+                    <ol>
+                        <li>点击「AI PPT」功能</li>
+                        <li>输入演讲主题或上传文档大纲</li>
+                        <li>选择 PPT 风格（商务、学术、创意等）</li>
+                        <li>点击「生成」，等待 10-30 秒</li>
+                        <li>预览 PPT，支持在线编辑或导出为 PPTX 文件</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>使用技巧：</strong>
+                        <ul>
+                            <li>主题描述越详细，生成效果越好</li>
+                            <li>可以指定页数（如"生成10页PPT"）</li>
+                            <li>支持添加具体要求（如"需要数据图表"）</li>
+                        </ul>
+                    </div>
+                    <blockquote>📸 配图位置：主题输入页面 + PPT预览效果图</blockquote>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">📄 步骤 6：文件扫描与总结</h3>
+                    <ol>
+                        <li>点击「智能扫描」或「文档总结」</li>
+                        <li>上传 PDF/Word 文件或拍照扫描纸质文档</li>
+                        <li>AI 自动识别文字并生成可编辑的文本</li>
+                        <li>点击「智能总结」，提取核心要点</li>
+                        <li>一键导出为 TXT 或分享到其他应用</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>适用场景：</strong>会议纪要整理、论文资料提炼、合同条款快速查看、纸质文档数字化
+                    </div>
+                    <blockquote>📸 配图位置：扫描识别过程 + 总结结果展示</blockquote>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🎬 步骤 7：视频内容总结</h3>
+                    <ol>
+                        <li>点击「视频总结」功能</li>
+                        <li>粘贴视频链接（支持B站、抖音、YouTube等）</li>
+                        <li>点击「开始总结」，等待分析完成</li>
+                        <li>查看视频核心内容摘要、关键时间点</li>
+                        <li>可导出文字版笔记</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>使用技巧：</strong>
+                        <ul>
+                            <li>适合总结网课、演讲、教程类视频</li>
+                            <li>自动生成时间轴，方便快速跳转</li>
+                            <li>支持中英文视频</li>
+                        </ul>
+                    </div>
+                    <blockquote>📸 配图位置：视频链接输入界面 + 总结结果示例</blockquote>
+                </div>
+            </div>
+            
+            <!-- 实战示例 -->
+            <div class="section">
+                <h2 class="section-title">三、实战示例</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">📝 示例 1：学生党 - 数学作业辅导</h3>
+                    <p><strong>场景：</strong>高中生需要解决一道复杂的数学函数题</p>
+                    <p><strong>操作步骤：</strong></p>
+                    <ol>
+                        <li>打开夸克 APP → AI 工具箱 → AI 搜题</li>
+                        <li>对准题目拍照</li>
+                        <li>查看详细解题步骤</li>
+                    </ol>
+                    <div class="prompt-box">
+                        <button class="copy-btn" onclick="copyText(this)">📋 复制</button>
+                        <pre>拍照识别这道高中数学函数题，给出详细解题步骤和知识点讲解</pre>
+                    </div>
+                    <div class="success">
+                        <strong>预期效果：</strong>
+                        <ul>
+                            <li>2 秒内识别题目</li>
+                            <li>提供完整解题过程</li>
+                            <li>附带相关知识点链接</li>
+                            <li>可保存到错题本</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">💼 示例 2：职场人士 - 快速生成周报</h3>
+                    <p><strong>场景：</strong>周五下班前需要提交工作周报，时间紧迫</p>
+                    <p><strong>操作步骤：</strong></p>
+                    <ol>
+                        <li>打开夸克 APP → AI 工具箱 → AI 写作</li>
+                        <li>选择「工作周报」模板</li>
+                        <li>输入本周工作内容关键词</li>
+                    </ol>
+                    <div class="prompt-box">
+                        <button class="copy-btn" onclick="copyText(this)">📋 复制</button>
+                        <pre>岗位：产品经理
+本周工作：
+1. 完成用户需求调研，收集50份问卷
+2. 设计新版本原型图，完成3次迭代
+3. 组织跨部门评审会议2次
+4. 跟进开发进度，解决5个关键bug
+下周计划：启动UI设计、准备用户测试</pre>
+                    </div>
+                    <div class="success">
+                        <strong>预期效果：</strong>生成一份结构完整的工作周报，包含本周工作总结（分条罗列）、工作亮点提炼、遇到的问题及解决方案、下周工作计划、专业的职场语言表达
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🎓 示例 3：考研党 - 视频网课笔记提取</h3>
+                    <p><strong>场景：</strong>需要复习2小时的专业课网课视频，时间有限</p>
+                    <p><strong>操作步骤：</strong></p>
+                    <ol>
+                        <li>打开夸克 APP → AI 工具箱 → 视频总结</li>
+                        <li>粘贴网课视频链接（如B站链接）</li>
+                        <li>等待AI分析完成</li>
+                    </ol>
+                    <div class="prompt-box">
+                        <button class="copy-btn" onclick="copyText(this)">📋 复制</button>
+                        <pre>总结这个视频的核心知识点，按章节提取要点，标注重要时间轴</pre>
+                    </div>
+                    <div class="success">
+                        <strong>预期效果：</strong>
+                        <ul>
+                            <li>生成 500-1000 字的文字版笔记</li>
+                            <li>自动划分知识点章节</li>
+                            <li>标注关键概念的视频时间点（如"10:25 - 重要公式推导"）</li>
+                            <li>可直接用于考前复习</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 提示词模板库 -->
+            <div class="section">
+                <h2 class="section-title">四、提示词模板库</h2>
+                <p style="margin-bottom: 20px; color: #666;">以下提示词可直接复制使用，根据实际情况替换 [ ] 内的内容：</p>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🎯 AI 搜题类</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>提示词</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>数学解题</td>
+                                <td>这道[学科]题目，需要详细的解题步骤和公式推导过程</td>
+                            </tr>
+                            <tr>
+                                <td>英语翻译</td>
+                                <td>翻译这段英文并解释重点语法知识</td>
+                            </tr>
+                            <tr>
+                                <td>物理实验</td>
+                                <td>这道物理实验题，需要实验步骤和注意事项</td>
+                            </tr>
+                            <tr>
+                                <td>化学方程式</td>
+                                <td>帮我配平这个化学方程式并说明反应原理</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">✍️ AI 写作类</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>提示词</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>工作周报</td>
+                                <td>生成一份[岗位]的工作周报，本周主要工作：[工作内容]，下周计划：[计划内容]</td>
+                            </tr>
+                            <tr>
+                                <td>活动策划</td>
+                                <td>写一份[活动类型]活动策划方案，目标人群：[人群]，预算：[金额]，时间：[日期]</td>
+                            </tr>
+                            <tr>
+                                <td>产品文案</td>
+                                <td>为[产品名称]写一段吸引人的产品介绍文案，突出[核心卖点]，字数控制在200字</td>
+                            </tr>
+                            <tr>
+                                <td>小红书文案</td>
+                                <td>写一条关于[主题]的小红书笔记，风格轻松有趣，包含3个话题标签</td>
+                            </tr>
+                            <tr>
+                                <td>邮件撰写</td>
+                                <td>写一封给[对象]的工作邮件，主题是[事项]，语气[正式/友好]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🎨 AI PPT 类</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>提示词</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>项目汇报</td>
+                                <td>生成一份[项目名称]的项目汇报PPT，包含：项目背景、执行情况、成果数据、后续计划，共15页，商务风格</td>
+                            </tr>
+                            <tr>
+                                <td>产品发布</td>
+                                <td>制作[产品]的新品发布会PPT，突出产品亮点和竞争优势，10页，科技感风格</td>
+                            </tr>
+                            <tr>
+                                <td>教学课件</td>
+                                <td>做一份[课程主题]的教学课件，目标学生[年级]，包含知识点讲解和练习题，20页</td>
+                            </tr>
+                            <tr>
+                                <td>读书分享</td>
+                                <td>生成《[书名]》的读书分享PPT，包括作者简介、核心观点、个人感悟，12页，文艺风格</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">📄 文档总结类</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>提示词</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>长文档提炼</td>
+                                <td>总结这份[文档类型]的核心要点，用条目形式呈现</td>
+                            </tr>
+                            <tr>
+                                <td>会议纪要</td>
+                                <td>整理这次会议的讨论内容，提取决策事项和待办任务</td>
+                            </tr>
+                            <tr>
+                                <td>论文摘要</td>
+                                <td>提炼这篇论文的研究方法、主要发现和结论</td>
+                            </tr>
+                            <tr>
+                                <td>合同审查</td>
+                                <td>梳理这份合同的关键条款和需要注意的风险点</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🎬 视频总结类</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>提示词</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>网课学习</td>
+                                <td>总结这个视频的知识点框架，标注重要时间节点</td>
+                            </tr>
+                            <tr>
+                                <td>演讲内容</td>
+                                <td>提取这个演讲的核心观点和金句，生成文字版笔记</td>
+                            </tr>
+                            <tr>
+                                <td>教程技能</td>
+                                <td>整理这个教程的操作步骤，按顺序列出关键步骤</td>
+                            </tr>
+                            <tr>
+                                <td>新闻资讯</td>
+                                <td>概括这条新闻视频的事件经过、影响和观点</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+            <!-- 知识延伸 -->
+            <div class="section">
+                <h2 class="section-title">五、知识延伸</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🧠 技术原理简介</h3>
+                    <p>夸克 APP 的 AI 能力主要基于以下技术：</p>
+                    <ul>
+                        <li><strong>大语言模型（LLM）</strong>：使用阿里自研的通义千问大模型，具备强大的语言理解和生成能力</li>
+                        <li><strong>OCR 文字识别</strong>：深度学习卷积神经网络，可精准识别各类印刷体和手写体</li>
+                        <li><strong>计算机视觉</strong>：用于题目识别、公式解析、图表理解</li>
+                        <li><strong>自然语言处理（NLP）</strong>：实现文档总结、关键信息提取、语义理解</li>
+                        <li><strong>多模态融合</strong>：将图像、文字、语音等多种输入方式结合处理</li>
+                    </ul>
+                    <p style="margin-top: 15px;">这些技术让 AI 能够"看懂"题目、"理解"文档、"创作"内容，真正成为你的智能助手。</p>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🔄 同类工具推荐</h3>
+                    <p>如果你对 AI 工具感兴趣，还可以尝试：</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>工具名称</th>
+                                <th>特色功能</th>
+                                <th>适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>百度文库 AI</strong></td>
+                                <td>PPT/文档生成更专业</td>
+                                <td>深度办公需求</td>
+                            </tr>
+                            <tr>
+                                <td><strong>通义听悟</strong></td>
+                                <td>音频转写能力更强</td>
+                                <td>会议纪要、采访记录</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kimi</strong></td>
+                                <td>超长文档处理（20万字）</td>
+                                <td>学术论文、法律合同</td>
+                            </tr>
+                            <tr>
+                                <td><strong>豆包</strong></td>
+                                <td>对话体验更自然</td>
+                                <td>创意写作、角色扮演</td>
+                            </tr>
+                            <tr>
+                                <td><strong>海螺 AI</strong></td>
+                                <td>语音通话超拟真</td>
+                                <td>口语练习、语音交互</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="highlight-box" style="margin-top: 15px;">
+                        <strong>选择建议：</strong>
+                        <ul>
+                            <li>综合性需求 → <strong>夸克 APP</strong>（本文主角）</li>
+                            <li>专注 PPT → 百度文库 AI</li>
+                            <li>专注长文档 → Kimi</li>
+                            <li>专注音频 → 通义听悟</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">🚀 进阶玩法</h3>
+                    
+                    <h4 style="color: #667eea; margin: 15px 0 10px 0;">1️⃣ 组合使用多个功能</h4>
+                    <ul>
+                        <li><strong>视频总结 + AI 写作</strong>：先用视频总结提取网课要点，再用 AI 写作生成读书笔记</li>
+                        <li><strong>扫描 + PPT</strong>：扫描纸质资料转为文字，再用 AI PPT 生成演示文稿</li>
+                        <li><strong>搜题 + 错题本</strong>：持续积累错题，考前一键复习</li>
+                    </ul>
+                    
+                    <h4 style="color: #667eea; margin: 15px 0 10px 0;">2️⃣ 打造个人知识库</h4>
+                    <ul>
+                        <li>将所有学习资料、工作文档上传到夸克网盘</li>
+                        <li>使用 AI 总结功能为每份文档生成摘要</li>
+                        <li>建立分类标签体系，快速检索</li>
+                    </ul>
+                    
+                    <h4 style="color: #667eea; margin: 15px 0 10px 0;">3️⃣ 自定义提示词模板</h4>
+                    <ul>
+                        <li>根据自己的常用场景，保存专属的提示词模板</li>
+                        <li>例如：固定的周报格式、PPT 风格偏好</li>
+                        <li>可大幅提升效率</li>
+                    </ul>
+                    
+                    <h4 style="color: #667eea; margin: 15px 0 10px 0;">4️⃣ 跨平台协作</h4>
+                    <ul>
+                        <li>夸克支持多端同步（手机/平板/电脑）</li>
+                        <li>在手机上扫描识别，在电脑上继续编辑</li>
+                        <li>文件可分享到微信、钉钉、飞书等办公工具</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 合规提示 -->
+            <div class="section">
+                <h2 class="section-title">六、合规提示</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">⚠️ 使用注意事项</h3>
+                    
+                    <div class="warning">
+                        <strong>1. 学术诚信</strong>
+                        <ul>
+                            <li>AI 搜题功能仅供学习参考，理解解题思路</li>
+                            <li>严禁用于考试作弊</li>
+                            <li>完成作业后应自己验算理解</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning">
+                        <strong>2. 版权意识</strong>
+                        <ul>
+                            <li>AI 生成的 PPT 模板、文案内容可商用，但建议修改优化</li>
+                            <li>扫描他人文档需获得授权</li>
+                            <li>使用网盘存储时注意文件版权</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning">
+                        <strong>3. 隐私保护</strong>
+                        <ul>
+                            <li>不要上传包含个人身份信息的敏感文档</li>
+                            <li>涉及公司机密的内容请勿上传</li>
+                            <li>定期清理云端文件</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning">
+                        <strong>4. 信息准确性</strong>
+                        <ul>
+                            <li>AI 生成的内容可能存在错误，使用前需人工审核</li>
+                            <li>特别是专业领域（法律、医疗）的内容，务必核实</li>
+                            <li>数据、日期等关键信息要仔细检查</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning">
+                        <strong>5. 合理使用</strong>
+                        <ul>
+                            <li>部分功能有使用次数限制（如AI生成功能）</li>
+                            <li>可通过完成任务或会员订阅获取更多额度</li>
+                            <li>避免滥用 AI 功能（如批量生成垃圾内容）</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">✅ 推荐 / ❌ 不推荐场景</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="success">
+                            <strong>✅ 推荐使用场景</strong>
+                            <ul style="margin-top: 10px;">
+                                <li>学习辅导和知识理解</li>
+                                <li>提升工作效率的辅助工具</li>
+                                <li>内容创作的灵感助手</li>
+                                <li>日常信息整理和管理</li>
+                            </ul>
+                        </div>
+                        <div class="warning">
+                            <strong>❌ 不推荐场景</strong>
+                            <ul style="margin-top: 10px;">
+                                <li>考试作弊</li>
+                                <li>抄袭他人作品</li>
+                                <li>传播未经核实的信息</li>
+                                <li>处理高度敏感的机密文件</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <h3 style="color: #667eea; margin-bottom: 15px;">📊 总结</h3>
+            <p style="margin-bottom: 15px;">夸克 APP 的 AI 工具箱是一个真正的效率提升神器，它将多个常用的AI功能整合在一起，为学生、职场人士和内容创作者提供了一站式解决方案。</p>
+            
+            <div style="text-align: left; max-width: 600px; margin: 20px auto;">
+                <p><strong>核心优势：</strong></p>
+                <p>✅ 功能全面（搜题/写作/PPT/扫描/总结）<br>
+                ✅ 完全免费（大部分功能无需会员）<br>
+                ✅ 操作简单（3步即可完成大部分任务）<br>
+                ✅ 效果出色（基于阿里通义大模型）<br>
+                ✅ 国内可用（无需魔法上网）</p>
+                
+                <p style="margin-top: 15px;"><strong>适合人群：</strong></p>
+                <p>🎓 学生党：作业辅导、考试复习、笔记整理<br>
+                💼 职场人：周报PPT、文档处理、会议纪要<br>
+                ✍️ 创作者：文案生成、素材提取、灵感激发</p>
+            </div>
+            
+            <p style="margin-top: 20px; font-weight: 600; color: #667eea;">赶快下载体验吧，让AI成为你的效率助手！</p>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e0e0e0;">
+            
+            <p style="font-size: 12px; color: #999;">
+                <strong>文档生成信息</strong><br>
+                创建时间：2025年12月17日 | 版本号：v1.0<br>
+                适用平台：微信公众号 / 小红书 / B站<br>
+                本教程由 AI 应用小百科创作助手生成
+            </p>
+        </div>
+    </div>
+    
+    <!-- 交互脚本 -->
+    <script>
+        // 复制提示词功能
+        function copyText(button) {
+            const promptBox = button.parentElement;
+            const textContent = promptBox.querySelector('pre').textContent;
+            
+            // 使用现代的 Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textContent).then(() => {
+                    showCopyFeedback(button, '✅ 已复制');
+                }).catch(err => {
+                    fallbackCopy(textContent, button);
+                });
+            } else {
+                fallbackCopy(textContent, button);
+            }
+        }
+        
+        // 降级复制方法（兼容旧浏览器）
+        function fallbackCopy(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopyFeedback(button, '✅ 已复制');
+            } catch (err) {
+                showCopyFeedback(button, '❌ 复制失败');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // 显示复制反馈
+        function showCopyFeedback(button, message) {
+            const originalText = button.textContent;
+            button.textContent = message;
+            button.style.background = message.includes('✅') ? '#28a745' : '#dc3545';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#667eea';
+            }, 2000);
+        }
+        
+        // 平滑滚动到顶部
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // 添加"返回顶部"按钮
+        window.addEventListener('scroll', () => {
+            const scrollBtn = document.getElementById('scrollTopBtn');
+            if (!scrollBtn) {
+                const btn = document.createElement('button');
+                btn.id = 'scrollTopBtn';
+                btn.innerHTML = '↑';
+                btn.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    display: none;
+                    z-index: 1000;
+                    transition: transform 0.3s ease;
+                `;
+                btn.onclick = scrollToTop;
+                document.body.appendChild(btn);
+            }
+            
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
+        });
+        
+        // 为卡片添加悬停提示
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                });
+            });
+            
+            // 为表格行添加点击高亮效果
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    tableRows.forEach(r => r.style.background = '');
+                    this.style.background = '#e3f2fd';
+                    setTimeout(() => {
+                        this.style.background = '';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

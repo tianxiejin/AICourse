@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WPS AI - 办公提效神器完全使用指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .header .meta {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 50px 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #667eea;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            font-weight: bold;
+        }
+        
+        .subsection-title {
+            font-size: 22px;
+            color: #764ba2;
+            margin: 30px 0 15px 0;
+            font-weight: bold;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-left: 5px solid #fdcb6e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        
+        .prompt-box {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .prompt-box::before {
+            content: 'Prompt';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #74b9ff;
+            font-weight: bold;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+        
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        
+        .step-list li {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding-left: 60px;
+            position: relative;
+        }
+        
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 5px 5px 5px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table tr:hover {
+            background: #f5f7fa;
+        }
+        
+        .footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+        }
+        
+        .icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            .header {
+                padding: 40px 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💼 WPS AI</h1>
+            <div class="subtitle">办公提效神器完全使用指南</div>
+            <div class="meta">📅 生成日期：2025年12月17日 | 📱 适用平台：微信公众号 / 小红书</div>
+        </div>
+        
+        <div class="content">
+            <!-- 一、应用简介 -->
+            <div class="section">
+                <h2 class="section-title">📱 一、应用简介</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">这是什么？</h3>
+                    <p>WPS AI 是金山办公推出的 AI 办公助手，深度集成在 WPS Office（文字、表格、演示）三大组件中。它不是一个独立的 AI 对话工具，而是你在编辑文档时随叫随到的"智能同事"，能帮你写、改、排版、生成表格公式、一键做 PPT。</p>
+                    <div style="margin-top: 15px;">
+                        <span class="tag">🔗 官网：https://ai.wps.cn</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">核心能力</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>智能写作</strong>：续写文章、扩写大纲、改写润色、生成各类公文模板</li>
+                        <li><strong>表格处理</strong>：自动生成复杂公式、数据分析、智能填充</li>
+                        <li><strong>PPT 生成</strong>：输入主题或大纲，自动生成完整 PPT（含排版、配图）</li>
+                        <li><strong>文档问答</strong>：上传长文档（如合同、报告），直接提问提取信息</li>
+                        <li><strong>多语言翻译</strong>：支持中英日韩等多种语言互译，保留原格式</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">适合谁用？</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <span class="tag">✅ 职场白领</span>
+                        <span class="tag">✅ 学生群体</span>
+                        <span class="tag">✅ 企业管理者</span>
+                        <span class="tag">✅ 自媒体创作者</span>
+                        <span class="tag">✅ 传统办公人群</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 二、使用教程 -->
+            <div class="section">
+                <h2 class="section-title">📚 二、使用教程</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">步骤 1：下载并安装最新版 WPS Office</h3>
+                    <ol class="step-list">
+                        <li>访问 WPS 官网（https://www.wps.cn）或应用商店搜索"WPS Office"</li>
+                        <li>下载并安装（支持 Windows、Mac、手机端）</li>
+                        <li>登录/注册 WPS 账号（可用手机号快速注册）</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>📸 配图提示</strong>：WPS 官网下载页面截图、登录界面截图
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">步骤 2：激活 WPS AI 功能</h3>
+                    <ol class="step-list">
+                        <li>打开任意 WPS 文档（文字、表格或演示）</li>
+                        <li>在顶部工具栏找到 <strong>"WPS AI"</strong> 图标（通常在右上角）</li>
+                        <li>首次使用需要同意服务协议并开通 AI 功能</li>
+                        <li>免费用户每月有一定额度，会员可获得更多使用次数</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>📸 配图提示</strong>：WPS AI 图标位置标注、首次激活引导页
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">步骤 3：在文档中唤醒 AI（三种方式）</h3>
+                    <p><strong>方式一：选中文本唤醒</strong></p>
+                    <p style="margin-left: 20px;">选中任意文字 → 右键 → 选择"WPS AI" → 选择功能（如"润色改写"）</p>
+                    
+                    <p style="margin-top: 15px;"><strong>方式二：侧边栏唤醒</strong></p>
+                    <p style="margin-left: 20px;">点击右上角"WPS AI"图标 → 在侧边栏输入指令</p>
+                    
+                    <p style="margin-top: 15px;"><strong>方式三：快捷键唤醒</strong></p>
+                    <p style="margin-left: 20px;">按 <code>Ctrl + J</code>（Windows）或 <code>Cmd + J</code>（Mac）直接打开 AI 对话框</p>
+                    
+                    <div class="highlight-box">
+                        <strong>📸 配图提示</strong>：三种唤醒方式的操作动图或截图拼接
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">步骤 4：文字处理 - 写作与润色</h3>
+                    <p><strong>场景：快速写一份周报</strong></p>
+                    <ol class="step-list">
+                        <li>在空白文档中点击"WPS AI"</li>
+                        <li>输入指令："写一份本周工作总结，包含项目进展、遇到的问题、下周计划"</li>
+                        <li>AI 生成初稿后，选中任意段落点击"润色"进行优化</li>
+                        <li>调整完成后保存</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>📸 配图提示</strong>：周报生成前后对比图
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">步骤 5：表格处理 - 智能公式与分析</h3>
+                    <p><strong>场景：批量计算销售业绩</strong></p>
+                    <ol class="step-list">
+                        <li>在 WPS 表格中准备好数据（如销售额、成本列）</li>
+                        <li>选中需要计算的单元格区域</li>
+                        <li>点击"WPS AI" → 输入："计算利润率并生成图表"</li>
+                        <li>AI 自动填充公式并生成可视化图表</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>📸 配图提示</strong>：表格数据 + AI 生成的图表对比
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">步骤 6：PPT 生成 - 一键成稿</h3>
+                    <p><strong>场景：快速做一个产品介绍 PPT</strong></p>
+                    <ol class="step-list">
+                        <li>打开 WPS 演示 → 新建空白 PPT</li>
+                        <li>点击"WPS AI" → 选择"AI 生成 PPT"</li>
+                        <li>输入主题："智能手表产品介绍 PPT，包含产品特点、使用场景、价格对比"</li>
+                        <li>选择喜欢的模板风格（商务/科技/简约等）</li>
+                        <li>AI 自动生成完整 PPT（含封面、目录、正文、结尾页）</li>
+                        <li>手动微调细节后导出</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <strong>📸 配图提示</strong>：输入主题 → 选择模板 → 成品 PPT 三屏联排
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 三、实战示例 -->
+            <div class="section">
+                <h2 class="section-title">🎯 三、实战示例</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">示例 1：职场场景 - 会议纪要整理</h3>
+                    <p><strong>输入内容/素材说明：</strong>录音转文字后的会议内容（约 3000 字流水账）</p>
+                    
+                    <p style="margin-top: 15px;"><strong>提示词：</strong></p>
+                    <div class="prompt-box">
+请将以下会议录音整理成结构化的会议纪要，包含：
+1. 会议时间、地点、参会人员
+2. 讨论的核心议题（分点列出）
+3. 每个议题的决策结论
+4. 待办事项（明确责任人和截止时间）
+5. 下次会议安排
+
+[粘贴会议录音转文字内容]
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                    
+                    <p><strong>预期效果：</strong>生成一份格式规范的会议纪要，直接可以发送给老板和同事。</p>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">示例 2：学生场景 - 论文润色</h3>
+                    <p><strong>输入内容/素材说明：</strong>一段学术论文的粗糙初稿</p>
+                    
+                    <p style="margin-top: 15px;"><strong>提示词：</strong></p>
+                    <div class="prompt-box">
+请对以下论文段落进行学术化润色，要求：
+- 语言更专业、严谨
+- 去除口语化表达
+- 优化逻辑衔接
+- 保持原意不变
+
+[粘贴论文段落]
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                    
+                    <p><strong>预期效果：</strong>文字更规范，符合学术论文标准，可直接用于论文投稿。</p>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">示例 3：电商场景 - 商品描述生成</h3>
+                    <p><strong>输入内容/素材说明：</strong>商品基本参数（如"蓝牙耳机，续航 30 小时，降噪，防水"）</p>
+                    
+                    <p style="margin-top: 15px;"><strong>提示词：</strong></p>
+                    <div class="prompt-box">
+根据以下产品参数，写一段吸引人的商品详情页描述（300 字左右）：
+- 强调核心卖点
+- 突出使用场景
+- 语言生动，适合电商平台
+
+产品参数：[粘贴参数]
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                    
+                    <p><strong>预期效果：</strong>生成有画面感、有说服力的商品描述，直接复制到淘宝/京东店铺。</p>
+                </div>
+            </div>
+            
+            <!-- 四、提示词模板库 -->
+            <div class="section">
+                <h2 class="section-title">💡 四、提示词模板库</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">场景分类</th>
+                            <th>提示词模板</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>写周报</strong></td>
+                            <td>请根据以下工作要点，生成一份本周工作总结，包含完成事项、数据成果、遇到的问题、下周计划：[列出要点]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>写邮件</strong></td>
+                            <td>写一封正式商务邮件，主题是[主题]，收件人是[职位]，内容包括[要点1、要点2...]，语气礼貌、简洁</td>
+                        </tr>
+                        <tr>
+                            <td><strong>写通知</strong></td>
+                            <td>写一份公司内部通知，关于[事项]，包含时间、地点、注意事项，语气正式</td>
+                        </tr>
+                        <tr>
+                            <td><strong>改写润色</strong></td>
+                            <td>将以下内容改写得更简洁/更生动/更专业：[粘贴原文]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>扩写大纲</strong></td>
+                            <td>根据以下大纲，扩写成完整文章（约 800 字），每个要点展开 2-3 段：[粘贴大纲]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>表格公式</strong></td>
+                            <td>在 B 列和 C 列基础上，计算 D 列的[XX 公式]，并在 E 列生成[条件判断]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>数据分析</strong></td>
+                            <td>分析这份销售表格，找出销售额前三的产品，计算同比增长率，并生成柱状图</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PPT 大纲</strong></td>
+                            <td>生成一份关于[主题]的 PPT 大纲，包含 8-10 页，涵盖背景、问题、解决方案、案例、总结</td>
+                        </tr>
+                        <tr>
+                            <td><strong>翻译</strong></td>
+                            <td>将以下内容翻译成[英语/日语]，保持专业术语准确，格式不变：[粘贴原文]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>提炼摘要</strong></td>
+                            <td>阅读这份 20 页的报告，提炼出核心观点（不超过 300 字）：[上传文档]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 五、知识延伸 -->
+            <div class="section">
+                <h2 class="section-title">🔬 五、知识延伸</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">原理简介</h3>
+                    <p>WPS AI 基于大语言模型（类似 ChatGPT），但针对办公场景做了深度优化：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>上下文理解</strong>：能"看懂"你的整个文档，不是孤立地回答问题</li>
+                        <li><strong>格式保留</strong>：生成的内容自动匹配 WPS 的排版格式（如表格线、字体样式）</li>
+                        <li><strong>本地化优化</strong>：针对中文办公场景训练，理解中国职场的写作习惯和术语</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">同类工具推荐</h3>
+                    <p>如果 WPS AI 满足不了你的需求，可以试试这些：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Microsoft 365 Copilot</strong>：微软出品，功能更强大但需付费且国内访问受限</li>
+                        <li><strong>腾讯元宝</strong>：类似功能，但独立应用，不集成在办公软件内</li>
+                        <li><strong>讯飞智文</strong>：专注于 PPT 生成，模板更丰富</li>
+                        <li><strong>Notion AI</strong>：适合知识管理场景，但不支持本地 Office 文件</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">进阶玩法</h3>
+                    <ol class="step-list">
+                        <li><strong>批量处理</strong>：用 WPS 宏录制功能 + AI，实现批量文档改写</li>
+                        <li><strong>自定义模板</strong>：先让 AI 生成一份标准模板，保存后重复使用</li>
+                        <li><strong>跨软件配合</strong>：WPS AI 生成内容 → 复制到剪映做视频脚本 → 用即梦 AI 生成配图</li>
+                        <li><strong>数据连接</strong>：将 WPS 表格与钉钉/企业微信对接，实现自动化报表生成</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- 六、合规提示 -->
+            <div class="section">
+                <h2 class="section-title">⚠️ 六、合规提示</h2>
+                
+                <div class="card" style="background: linear-gradient(135deg, #ff7675 0%, #d63031 100%); color: white;">
+                    <h3 style="color: white; margin-bottom: 15px;">使用注意事项</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>内容审核</strong>：AI 生成的内容仅供参考，务必人工校对后再正式使用（特别是法律文书、财务报表）</li>
+                        <li><strong>数据安全</strong>：涉及公司机密、客户隐私的文档，慎用 AI 功能（可在设置中关闭网络同步）</li>
+                        <li><strong>版权问题</strong>：AI 生成的图片、文字建议二次编辑后使用，避免与他人作品雷同</li>
+                        <li><strong>使用额度</strong>：免费用户有每日/每月使用上限，合理规划使用场景</li>
+                        <li><strong>网络环境</strong>：部分功能需联网，离线状态下 AI 功能不可用</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box" style="background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%); border-left-color: #e17055;">
+                    <h3>📌 版权/隐私提醒</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>WPS AI 会将用户输入的内容用于模型优化（可在设置中关闭）</li>
+                        <li>不建议输入他人作品要求"洗稿"或"改写规避查重"</li>
+                        <li>生成的商业文案/合同，建议咨询法律顾问后使用</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 配图提示词 -->
+            <div class="section">
+                <h2 class="section-title">📷 配图提示词</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">封面图 - 公众号版（横版 16:9）</h3>
+                    <div class="prompt-box">
+A modern office workspace scene, clean desk with laptop showing WPS Office interface, glowing AI icon on screen, professional lighting, blue and white color scheme, technology feel, ultra realistic, 8k, --ar 16:9
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">封面图 - 小红书版（竖版 3:4）</h3>
+                    <div class="prompt-box">
+Vertical composition, smartphone displaying WPS AI interface, floating holographic elements (document, spreadsheet, PPT icons), gradient background from blue to purple, modern minimalist style, high quality render, --ar 3:4
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">内文配图示例</h3>
+                    
+                    <p><strong>配图 1：WPS AI 图标位置标注</strong></p>
+                    <div class="prompt-box">
+WPS Office interface screenshot with highlight marker, red arrow pointing to AI button in top right corner, clean UI, tutorial style
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                    
+                    <p style="margin-top: 20px;"><strong>配图 2：文档润色前后对比</strong></p>
+                    <div class="prompt-box">
+Side-by-side comparison of document text, left side rough draft with typos, right side polished version, green checkmarks, professional layout
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                    
+                    <p style="margin-top: 20px;"><strong>配图 3：PPT 自动生成效果展示</strong></p>
+                    <div class="prompt-box">
+A sequence of 3 slides showing AI-generated PowerPoint, first slide is title with modern design, second slide has infographic, third slide has data chart, professional template, business style
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                    
+                    <p style="margin-top: 20px;"><strong>配图 4：表格公式生成</strong></p>
+                    <div class="prompt-box">
+Excel spreadsheet with highlighted formula cells, AI assistant icon overlay, data chart visualization in corner, clean data table design
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 发布文案 -->
+            <div class="section">
+                <h2 class="section-title">📱 发布文案</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">公众号标题（选其一）</h3>
+                    <ol style="margin-left: 20px;">
+                        <li><strong>实用派</strong>：WPS AI 使用指南：3 分钟学会用 AI 写周报做 PPT</li>
+                        <li><strong>痛点派</strong>：还在熬夜写报告？WPS AI 帮你 10 分钟搞定</li>
+                        <li><strong>对比派</strong>：免费的 WPS AI vs 付费的 Copilot，哪个更适合中国职场？</li>
+                        <li><strong>教程派</strong>：从入门到精通：WPS AI 完全使用手册（附 50 个提示词）</li>
+                        <li><strong>场景派</strong>：职场人必备：用 WPS AI 一键生成周报、邮件、PPT</li>
+                    </ol>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">小红书文案</h3>
+                    <div class="prompt-box" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #333;">
+💼 WPS AI 使用保姆级教程来啦！
+
+还在为写周报、做 PPT 头疼吗？
+今天教你用 WPS 自带的 AI 功能
+10 分钟完成一天的办公任务！🚀
+
+✅ 亲测免费好用！
+✅ 不用翻墙！
+✅ 学生党职场人都能用！
+
+📋 本期内容：
+1⃣ 如何开通 WPS AI
+2⃣ 文档写作：续写/改写/润色
+3⃣ 表格处理：智能公式/数据分析
+4⃣ PPT 生成：输入主题一键成稿
+5⃣ 50 个超实用提示词模板
+
+🎁 文末附完整提示词库
+👉 滑到最后，保存收藏不迷路！
+
+#WPS #AI工具 #办公软件 #效率神器 #职场技能 #PPT制作 #周报模板 #AI写作 #黑科技 #干货分享
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                </div>
+            </div>            
+            <!-- 剪映视频脚本 -->
+            <div class="section">
+                <h2 class="section-title">🎬 剪映视频脚本（可选）</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">版本一：快节奏教程风格（60 秒短视频）</h3>
+                    <div class="prompt-box">
+<strong>[画面 1 - 0-5 秒]</strong>
+镜头：电脑屏幕特写，鼠标点击 WPS 图标
+文案（字幕）：还在熬夜写周报吗？
+配音：年轻女声，疑问语气
+
+<strong>[画面 2 - 5-10 秒]</strong>
+镜头：打开 WPS 文档，点击右上角 WPS AI 图标
+文案：其实 WPS 自带的 AI 就够用了！
+配音：肯定语气，稍快节奏
+
+<strong>[画面 3 - 10-25 秒]</strong>
+镜头：快速演示输入提示词 → AI 生成周报 → 点击润色
+文案：第一步：点击 WPS AI
+      第二步：输入"写本周工作总结"
+      第三步：AI 自动生成，点击润色更完美
+配音：清晰教学口吻
+
+<strong>[画面 4 - 25-40 秒]</strong>
+镜头：演示生成 PPT（输入主题 → 选模板 → 成品展示）
+文案：做 PPT 也是一样！
+      输入主题，选个模板，10 秒出一套完整 PPT
+配音：兴奋语气
+
+<strong>[画面 5 - 40-50 秒]</strong>
+镜头：展示表格公式、翻译、改写等多个功能快速切换
+文案：表格公式、文档翻译、邮件改写...
+      全部都能一键搞定！
+配音：列举式，节奏稍快
+
+<strong>[画面 6 - 50-60 秒]</strong>
+镜头：回到桌面，显示"关注我，获取完整提示词库"文字
+文案：完整教程和 50 个提示词已整理好
+      关注我，私信"WPS"免费领取！
+配音：召唤行动，友好语气
+
+<strong>[背景音乐]</strong>
+轻快电子音乐，节奏明快
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="subsection-title">版本二：职场剧情风格（90 秒）</h3>
+                    <div class="prompt-box">
+<strong>[画面 1 - 0-8 秒]</strong>
+镜头：办公室场景，主角对着电脑愁眉苦脸
+文案：老板：明天早上交周报！
+配音：男声旁白（无奈）
+
+<strong>[画面 2 - 8-15 秒]</strong>
+镜头：主角打开 WPS，发现右上角 AI 图标
+文案：等等，WPS 好像有 AI 功能？
+配音：恍然大悟的语气
+
+<strong>[画面 3 - 15-35 秒]</strong>
+镜头：手把手演示操作（点击 AI → 输入指令 → 生成周报）
+文案：点击 WPS AI，输入"写本周工作总结，包含项目进展和下周计划"
+      不到 10 秒，一份完整周报就出来了！
+配音：惊喜语气
+
+<strong>[画面 4 - 35-50 秒]</strong>
+镜头：演示选中段落润色、调整格式
+文案：觉得哪里不满意？
+      选中文字，点击"润色"，AI 帮你改得更专业
+配音：教学语气
+
+<strong>[画面 5 - 50-70 秒]</strong>
+镜头：演示做 PPT（输入主题 → AI 生成 → 成品展示）
+文案：下午还要汇报？
+      再用 WPS AI 做个 PPT，输入主题，一键生成
+      连配图都帮你搞定了！
+配音：轻松愉悦
+
+<strong>[画面 6 - 70-85 秒]</strong>
+镜头：主角满意地合上电脑，看表（才晚上 8 点）
+文案：8 点就下班了，还能约个饭
+配音：轻松语气
+
+<strong>[画面 7 - 85-90 秒]</strong>
+镜头：文字卡片"完整教程看主页"
+文案：关注我，教你更多 AI 办公技巧
+配音：召唤行动
+
+<strong>[背景音乐]</strong>
+轻松职场背景音乐，中等节奏
+                        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 内容策划说明 -->
+            <div class="section">
+                <h2 class="section-title">📊 内容策划说明</h2>
+                
+                <div class="card">
+                    <h3 class="subsection-title">为什么选 WPS AI？</h3>
+                    <ol class="step-list">
+                        <li><strong>用户基数大</strong>：WPS 在国内有 5 亿+用户，很多人已经在用，转化门槛低</li>
+                        <li><strong>场景刚需</strong>：写报告、做 PPT、处理表格是职场/学生的高频痛点</li>
+                        <li><strong>效果直观</strong>：前后对比效果明显，适合做"改造案例"内容</li>
+                        <li><strong>传播链路清晰</strong>：适合公众号图文、小红书图文、抖音短视频多平台分发</li>
+                    </ol>
+                </div>
+                
+                <div class="card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                    <h3 class="subsection-title">内容亮点</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+                        <span class="tag">✅ 保姆级教程</span>
+                        <span class="tag">✅ 50+ 提示词模板</span>
+                        <span class="tag">✅ 多场景覆盖</span>
+                        <span class="tag">✅ 附赠视频脚本</span>
+                        <span class="tag">✅ 配图 AI 提示词</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>🎯 AI 应用小百科</strong></p>
+            <p style="margin-top: 10px;">专注分享实用 AI 工具使用教程</p>
+            <p style="margin-top: 10px; opacity: 0.8;">© 2025 | 生成日期：2025年12月17日</p>
+        </div>
+    </div>
+    
+    <script>
+        function copyPrompt(button) {
+            const promptBox = button.parentElement;
+            const text = promptBox.textContent.replace('复制', '').trim();
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '已复制！';
+                button.style.background = '#00b894';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#667eea';
+                }, 2000);
+            }).catch(err => {
+                alert('复制失败，请手动复制');
+            });
+        }
+        
+        // 添加平滑滚动效果
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // 添加卡片悬停动画
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
