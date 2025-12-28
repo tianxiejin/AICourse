@@ -241,6 +241,21 @@
             aspect-ratio: 16/9;
         }
 
+        @media (max-width: 768px) {
+            .project-info {
+                position: relative;
+                /* Disable sticky on mobile */
+                top: 0;
+                margin-bottom: 2rem;
+            }
+
+            .gallery-item {
+                aspect-ratio: auto;
+                /* Allow natural height or keep 16/9 if preferred, but usually auto is safer if images vary */
+                min-height: 200px;
+            }
+        }
+
         .gallery-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
@@ -566,8 +581,10 @@
             lightbox.classList.add('active');
         }
 
-        lightbox.addEventListener('click', () => {
-            lightbox.classList.remove('active');
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
         });
 
         // Sticky Header Effect
