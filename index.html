@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIGC 项目实战培训 | 实战落地课程</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3 {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Project Section */
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .project-info {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            aspect-ratio: 16/9;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-caption {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+
+        .active {
+            display: flex;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            background: var(--bg-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo" style="font-weight:700; font-size:1.2rem; color:white;">AIGC Training</div>
+                <ul class="nav-links">
+                    <li><a href="#course-design">课程设计</a></li>
+                    <li><a href="#fullstack">全栈平台</a></li>
+                    <li><a href="#supply-chain">供应链建模</a></li>
+                    <li><a href="#agent-dev">Agent开发</a></li>
+                    <li><a href="#enterprise">企业网关</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container hero">
+        <h1>AIGC 项目实战培训课程</h1>
+        <p>从课程设计到企业级架构落地的完整 AIGC 应用实战。涵盖金融科技、全栈开发、垂直领域建模、智能体开发及企业审计五大核心模块。</p>
+        <a href="#course-design"
+            style="display:inline-block; padding: 0.8rem 2rem; background:var(--accent-color); color:#fff; text-decoration:none; border-radius:30px; font-weight:600;">开始探索</a>
+    </div>
+
+    <!-- Project 1 -->
+    <section id="course-design">
+        <div class="container project-grid">
+            <div class="project-info">
+                <h3>PROJECT 01</h3>
+                <h2>金融科技课程设计</h2>
+                <p>利用 AIGC 重构课程体系设计，解决课程开发周期长、案例难找的痛点。</p>
+                <ul class="feature-list">
+                    <li><strong>数字人讲师</strong>：HeyGen/D-ID 快速生成课程视频</li>
+                    <li><strong>智能大纲</strong>：基于 JD 分析生成对标就业的大纲</li>
+                    <li><strong>合成数据</strong>：生成脱敏的虚拟银行流水/信贷数据</li>
+                    <li><strong>RAG 助教</strong>：构建 24/7 智能答疑知识库</li>
+                </ul>
+
+                <div
+                    style="margin-top: 2rem; padding: 1.5rem; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-color); border-radius: 0 8px 8px 0;">
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">💡 深度思考：后AI时代的变革</h4>
+                    <p style="font-size: 0.95rem; font-style: italic; color: #e2e8f0;">
+                        "这次AI变革是在消除自然语言与机器语言的壁垒，消除知识与技能的壁垒。"</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">
+                        实验证明，无技术背景的金融老师凭借 AIGC 能力可以实现<strong>“工财融合”</strong>。
+                        后 AI 时代的核心竞争力是<strong>复合能力</strong>。
+                        对于财经高校而言，这是百年未有之大变局。生产要素与关系的重置，势必带来管理、经济、金融的新理论。
+                        <strong>"新的管理理论之父、经济学家，会诞生在中国。"</strong>
+                    </p>
+                </div>
+            </div>
+            <div class="gallery" id="gallery-fintech">
+                <!-- JS will inject images -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Project 2 -->
+    <section id="fullstack">
+        <div class="container project-grid">
+            <div class="project-info">
+                <h3>PROJECT 02</h3>
+                <h2>全栈工作站平台</h2>
+                <p>AI 辅助全栈应用开发与部署，实现后端 API、Prisma 数据库与 Next.js 前端仪表板。</p>
+                <ul class="feature-list">
+                    <li><strong>全流程辅助</strong>：Schema 设计、种子数据、API 调试</li>
+                    <li><strong>Debug 实战</strong>：修复依赖错误与生成器配置</li>
+                    <li><strong>功能迭代</strong>：多用户数据隔离与状态管理</li>
+                </ul>
+
+                <div
+                    style="margin-top: 2rem; padding: 1.5rem; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-color); border-radius: 0 8px 8px 0;">
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">💡 深度思考：生产方式的颠覆</h4>
+                    <p style="font-size: 0.95rem; font-style: italic; color: #e2e8f0;">"聊聊天，说人话，机器就可以干活了。"</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">
+                        实战表明，先进的模型已经率先进入真正的 AIGC 时代，几句话即可生成复合型团队几天的工作量。
+                        从“重资产”交付转向“轻资产”数字化转型。
+                        当自然语言和机器语言的壁垒消失，<strong>人文</strong>将是未来时代的核心竞争力和价值。
+                        这种生产方式的颠覆，必将催生管理、经济、金融的全面颠覆。
+                    </p>
+                </div>
+            </div>
+            <div class="gallery" id="gallery-fullstack"></div>
+        </div>
+    </section>
+
+    <!-- Project 3 -->
+    <section id="supply-chain">
+        <div class="container project-grid">
+            <div class="project-info">
+                <h3>PROJECT 03</h3>
+                <h2>供应链知识建模</h2>
+                <p>垂直领域知识提取与建模，以轴承供应链为例，构建行业风险分析模型。</p>
+                <ul class="feature-list">
+                    <li><strong>领域知识注入</strong>：行业标准的 Embedding 处理</li>
+                    <li><strong>模型构建</strong>：引导 AI 建立风险分析与预测模型</li>
+                    <li><strong>专家交互</strong>：多轮对话打磨专业准确性</li>
+                </ul>
+
+                <div
+                    style="margin-top: 2rem; padding: 1.5rem; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-color); border-radius: 0 8px 8px 0;">
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">💡 深度思考：技术平权与教育逻辑</h4>
+                    <p style="font-size: 0.95rem; font-style: italic; color: #e2e8f0;">"AIGC
+                        的底层逻辑，和教育教学是一样的：人=教师，AI=学生。"</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">
+                        <strong>技术平权</strong>：当技术门槛消失，理工科的经管优势不再，拥有深厚底蕴的<strong>正统财经/人文学科</strong>价值回归。
+                        核心不再是代码，而是<strong>提示词</strong>与<strong>克服幻觉的专业判断力</strong>。
+                    </p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        <strong>核心逻辑</strong>：人作为“教师”引导方向并避免“学生”（AI）进入死循环。
+                        最终目标是利用 AI 丰富自身，构建<strong>超越自己知识边界</strong>的数字化产品。
+                    </p>
+                </div>
+            </div>
+            <div class="gallery" id="gallery-supplychain"></div>
+        </div>
+    </section>
+
+    <!-- Project 4 -->
+    <section id="agent-dev">
+        <div class="container project-grid">
+            <div class="project-info">
+                <h3>PROJECT 04</h3>
+                <h2>IDE 智能体开发</h2>
+                <p>开发 VS Code Copilot 原生自定义 Agent，集成工作流与外部工具。</p>
+                <ul class="feature-list">
+                    <li><strong>Agent 定义</strong>：.agent.md 配置与角色设定</li>
+                    <li><strong>环境集成</strong>：Git 版本控制与 VM 远程开发</li>
+                    <li><strong>Prompt 工程</strong>：系统提示词优化与输出规范</li>
+                </ul>
+
+                <div
+                    style="margin-top: 2rem; padding: 1.5rem; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-color); border-radius: 0 8px 8px 0;">
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">💡 深度思考：边界无限放大</h4>
+                    <p style="font-size: 0.95rem; font-style: italic; color: #e2e8f0;">"信息化是业务重构，数字化是业务驱动，AI 是边界的无限放大。"
+                    </p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">
+                        <strong>三模型协同</strong>：利用 Claude (用力过猛) 与 Gemini 3 (吝惜输出) 一正一反生成样本，再由 ChatGPT 5.2 (理性裁判) 做选择。
+                        <strong>理性的本质</strong>：懂得保留，懂得边界，懂得说“不”。
+                    </p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        <strong>博弈的隐忧</strong>：AI 对弈的原型是人类博弈，竞争可能导致越过底线。
+                        管理者应利用 AI 从需求方转变为<strong>驱动者</strong>，实现能力边界的无限放大。
+                    </p>
+                </div>
+            </div>
+            <div class="gallery" id="gallery-agent"></div>
+        </div>
+    </section>
+
+    <!-- Project 5 -->
+    <section id="enterprise">
+        <div class="container project-grid">
+            <div class="project-info">
+                <h3>PROJECT 05</h3>
+                <h2>企业级 API 网关</h2>
+                <p>开发 Claude/OpenAI 中转服务，实现企业级的合规审计与权限管理。</p>
+                <ul class="feature-list">
+                    <li><strong>核心架构</strong>：API 代理与兼容层实现</li>
+                    <li><strong>安全合规</strong>：JWT 鉴权、敏感词过滤与分类</li>
+                    <li><strong>数据审计</strong>：Token 统计与 Request/Response 全记录</li>
+                </ul>
+
+                <div
+                    style="margin-top: 2rem; padding: 1.5rem; background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-color); border-radius: 0 8px 8px 0;">
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">💡 深度思考：守正创新与人工驱动</h4>
+                    <p style="font-size: 0.95rem; font-style: italic; color: #e2e8f0;">
+                        "人工智能，短板是人工。智能就像知识陈旧的孔乙己，需要人工去驱动。"</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">
+                        <strong>创新的底线</strong>：安全、合规、可控。创新如果“出师未捷身先死”，那是无能。
+                    </p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                        <strong>实战方法论</strong>：上游文档与模型知识往往是陈旧的。不要自己读文档，而是驱动 Agent
+                        去<strong>读取、对比测试、修正</strong>，发现真实规则并构建路由。
+                        这不仅是开发，更是<strong>“传道、授业、解惑”</strong>的教师级过程。
+                    </p>
+                </div>
+            </div>
+            <div class="gallery" id="gallery-enterprise"></div>
+        </div>
+    </section>
+
+    <!-- Final Conclusion -->
+    <section id="conclusion"
+        style="background: linear-gradient(180deg, var(--bg-color) 0%, #1e293b 100%); text-align: center; padding: 100px 0;">
+        <div class="container">
+            <h1 style="font-size: 2.5rem; margin-bottom: 2rem;">🔮 未来已来</h1>
+            <p style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 3rem; font-weight: 300;">
+                "你是迎接盛宴？还是冲击？"
+            </p>
+            <div
+                style="max-width: 800px; margin: 0 auto; text-align: left; background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 16px; border: 1px solid var(--border-color);">
+                <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    命，难算。但技术趋势是可以预判的，且几乎不会有偏差。
+                </p>
+                <p style="font-size: 1.2rem; color: var(--text-primary); font-weight: 500;">
+                    无数次技术变革的方向都是 <span style="color: var(--accent-color);">“终端轻量化”</span>：
+                </p>
+                <div
+                    style="display: flex; justify-content: space-between; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem; color: var(--text-secondary);">
+                    <span>大型机</span> <span>→</span>
+                    <span>小型机</span> <span>→</span>
+                    <span>x86 PC</span> <span>→</span>
+                    <span>ARM 手机</span> <span>→</span>
+                    <strong style="color: var(--accent-color);">AIGC</strong>
+                </div>
+                <p style="font-size: 1rem; margin-top: 1.5rem; text-align: right; font-style: italic;">
+                    "这一次，也不会例外。"
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AIGC 项目实战培训课程 | Generated by AntiGravity Agent</p>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <img src="" alt="Full size preview">
+    </div>
+
+    <script>
+        // Configuration for galleries
+        const projects = [
+            { id: 'gallery-fintech', prefix: 'AIGC_Course_Design_Fintech', count: 14 },
+            { id: 'gallery-fullstack', prefix: 'FullStack_AI_Platform', count: 21 },
+            { id: 'gallery-supplychain', prefix: 'SupplyChain_Modeling', count: 7 },
+            { id: 'gallery-agent', prefix: 'VSCode_Agent_Dev', count: 25 },
+            { id: 'gallery-enterprise', prefix: 'Enterprise_API_Gateway', count: 13 }
+        ];
+
+        // Render Galleries
+        projects.forEach(proj => {
+            const container = document.getElementById(proj.id);
+            for (let i = 1; i <= proj.count; i++) {
+                const num = i.toString().padStart(2, '0');
+                const filename = `${proj.prefix}_${num}.png`;
+
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `
+                    <img src="${filename}" alt="${proj.prefix} ${num}" loading="lazy">
+                `;
+                item.onclick = () => openLightbox(filename);
+                container.appendChild(item);
+            }
+        });
+
+        // Lightbox Logic
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+
+        lightbox.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        // Sticky Header Effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
